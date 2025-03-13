@@ -11,6 +11,7 @@
 import numpy as np
 import pandas as pd
 import xarray as xr
+from packaging.version import Version
 
 ver = '2.0'
 
@@ -35,13 +36,23 @@ days = ['{:02d}'.format(day) for day in date_range.day]
 
 first= True
 for date in range(0,len(date_range)):
-
-    path = ('https://data.cci.ceda.ac.uk/thredds/dodsC/esacci/lakes/data/lake_products/L3S/v'+ ver+ '/'
-        +year[date]+ '/'+ months[date]+ '/ESACCI-LAKES-L3S-LK_PRODUCTS-MERGED-'
-        +year[date]+  months[date]+ days[date]+ '-fv'+ ver+ '.nc?'
-        +'lat'+ lat_range_str+ ',lon'+ lon_range_str+ ',time[0:1:0],lake_surface_water_temperature[0:1:0]'
-        +lat_range_str + lon_range_str + ','
-        +'lswt_quality_level[0:1:0]'+ lat_range_str+ lon_range_str)
+    
+    if Version(ver) < Version("2.1"):
+        path = ('https://data.cci.ceda.ac.uk/thredds/dodsC/esacci/lakes/data/lake_products/L3S/v'+ ver+ '/'
+          +year[date]+ '/'+ months[date]+ '/ESACCI-LAKES-L3S-LK_PRODUCTS-MERGED-'
+          +year[date]+  months[date]+ days[date]+ '-fv'+ ver+ '.nc?'
+          +'lat'+ lat_range_str+ ',lon'+ lon_range_str+ ',time[0:1:0],lake_surface_water_temperature[0:1:0]'
+          +lat_range_str + lon_range_str + ','
+          +'lswt_quality_level[0:1:0]'+ lat_range_str+ lon_range_str)
+    else:
+        path = ('https://data.cci.ceda.ac.uk/thredds/dodsC/esacci/lakes/data/lake_products/L3S/v'+ ver+ '/merged_product/'
+          +year[date]+ '/'+ months[date]+ '/ESACCI-LAKES-L3S-LK_PRODUCTS-MERGED-'
+          +year[date]+  months[date]+ days[date]+ '-fv'+ ver+ '.0.nc?'
+          +'lat'+ lat_range_str+ ',lon'+ lon_range_str+ ',time[0:1:0],lake_surface_water_temperature[0:1:0]'
+          +lat_range_str + lon_range_str + ','
+          +'lswt_quality_level[0:1:0]'+ lat_range_str+ lon_range_str)
+    
+    
     dataset = xr.open_dataset(path)
     if first:
         combined_dataset = dataset

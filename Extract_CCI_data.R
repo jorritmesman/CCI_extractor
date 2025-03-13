@@ -57,11 +57,21 @@ for (y in 1:length(years)) {
       eom<-eom[[1]]
       if (d <= eom){
         
-        url <- paste0('https://data.cci.ceda.ac.uk/thredds/dodsC/esacci/lakes/data/lake_products/L3S/v', ver, '/',
-                     years[y], '/', sprintf("%02d", m), '/ESACCI-LAKES-L3S-LK_PRODUCTS-MERGED-',
-                     years[y],  sprintf("%02d", m), sprintf("%02d", d), '-fv', ver, '.nc?',
-                     'lat', lat_range_str, ',lon', lon_range_str, ',time[0:1:0],lake_surface_water_temperature[0:1:0]', lat_range_str, lon_range_str, ',',
-                     'lswt_quality_level[0:1:0]', lat_range_str, lon_range_str)
+        if(compareVersion(version, "2.1") == -1L){
+          url <- paste0('https://data.cci.ceda.ac.uk/thredds/dodsC/esacci/lakes/data/lake_products/L3S/v', ver, '/',
+                        years[y], '/', sprintf("%02d", m), '/ESACCI-LAKES-L3S-LK_PRODUCTS-MERGED-',
+                        years[y],  sprintf("%02d", m), sprintf("%02d", d), '-fv', ver, '.nc?',
+                        'lat', lat_range_str, ',lon', lon_range_str, ',time[0:1:0],lake_surface_water_temperature[0:1:0]', lat_range_str, lon_range_str, ',',
+                        'lswt_quality_level[0:1:0]', lat_range_str, lon_range_str)
+        }else{
+          url <- paste0('https://data.cci.ceda.ac.uk/thredds/dodsC/esacci/lakes/data/lake_products/L3S/v', ver,
+                        '/merged_product/',
+                        years[y], '/', sprintf("%02d", m), '/ESACCI-LAKES-L3S-LK_PRODUCTS-MERGED-',
+                        years[y],  sprintf("%02d", m), sprintf("%02d", d), '-fv', ver, '.0.nc?',
+                        'lat', lat_range_str, ',lon', lon_range_str, ',time[0:1:0],lake_surface_water_temperature[0:1:0]', lat_range_str, lon_range_str, ',',
+                        'lswt_quality_level[0:1:0]', lat_range_str, lon_range_str)
+        }
+        
         
         info  <- nc_open(url)
 
